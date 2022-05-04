@@ -12,6 +12,7 @@ const addNote = (title, body) => {
         return note.title === title;
     })
 
+
     if (duplicateNote) {
         console.log(chalk.red.inverse('Note title taken'));
         return
@@ -38,8 +39,19 @@ const removeNote = (title) => {
         return
     }
 
-    saveNotes(updatedNotes);
     console.log(chalk.green.inverse('Note removed'));
+
+    if (updatedNotes.length === 0) {
+        fs.unlink('notes.json', err => {
+            if (err) {
+                console.log(err);
+            }
+        });
+        
+        return
+    }
+
+    saveNotes(updatedNotes);
 }
 
 const listNotes = () => {
@@ -77,7 +89,7 @@ const loadNotes = () => {
         return JSON.parse(dataJSON);
     } catch (e) {
         return []
-    } 
+    }
 }
 
 export { 
